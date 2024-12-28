@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">simpleDictV2</string>
+    <string name="query_hint">查询</string>
+    <string name="query_button">搜索</string>
+    <string name="results">结果显示区</string>
+    <string name="no_results_found">没有找到结果</string>
+    <string name="search_result">结果：%1$s\n音标：%2$s\n定义：%3$s\n翻译：%4$s</string>
+    <string name="input_query">请输入查询内容</string>
+    <string name="prompt_enter_query">请输入查询内容</string>
+    <string name="word_result_format">Word: %1$s\nPhonetic: %2$s\nDefinition: %3$s\nTranslation: %4$s</string>
+    <string name="fab_content_description">Open menu</string>
+</resources>

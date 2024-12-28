@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".MainActivity">
+
+    <!-- Main Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <EditText
+            android:id="@+id/queryInput"
+            android:layout_width="264dp"
+            android:layout_height="wrap_content"
+            android:autofillHints="输入查询内容"
+            android:hint="@string/query_hint"
+            android:inputType="text"
+            android:minHeight="48dp" />
+
+        <!-- Query Type Selection -->
+        <RadioGroup
+            android:id="@+id/queryTypeRadioGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioWord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Word" />
+
+            <RadioButton
+                android:id="@+id/radioTranslation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Translation" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/queryButton"
+            android:layout_width="237dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:text="@string/query_button"
+            android:textColor="#0F0E0E" />
+
+        <TextView
+            android:id="@+id/resultText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/results"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <!-- Bottom App Bar with Menu Button -->
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:backgroundTint="@color/white"
+        app:fabAlignmentMode="end">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_more"
+            android:contentDescription="@string/fab_content_description"
+            app:tint="@color/white"
+            app:backgroundTint="@color/purple_700" />
+    </com.google.android.material.bottomappbar.BottomAppBar>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+<!--//@android:drawable/ic_menu_more-->
