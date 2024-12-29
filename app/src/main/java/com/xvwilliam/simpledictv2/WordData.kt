@@ -1,6 +1,6 @@
 package com.xvwilliam.simpledictv2
 
-data class WordData(
+data class WordData1(
     val word: String,
     val phonetic: String,
     val definition: String,

@@ -1,56 +1,54 @@
 package com.xvwilliam.simpledictv2
 
 import android.content.Context
-//import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
-//import java.io.File
+import java.io.File
 import java.io.FileOutputStream
-//import java.io.InputStream
+import java.io.IOException
+import java.io.InputStream
 
-class EcdictDatabaseHelper(private val context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
+class EcdictDatabaseHelper(private val context: Context) {
 
     companion object {
         private const val DATABASE_NAME = "ecdict.db"
-        private const val DATABASE_VERSION = 1
     }
 
-    private fun databaseExists(): Boolean {
+    init {
+        createDatabase()
+    }
+
+    private fun createDatabase() {
         val dbFile = context.getDatabasePath(DATABASE_NAME)
-        return dbFile.exists()
-    }
-
-    private fun copyDatabase() {
-        try {
-            val inputStream = context.assets.open(DATABASE_NAME)
-            val outputStream = FileOutputStream(context.getDatabasePath(DATABASE_NAME))
-
-            val buffer = ByteArray(1024)
-            var length: Int
-            while (inputStream.read(buffer).also { length = it } > 0) {
-                outputStream.write(buffer, 0, length)
+        if (!dbFile.exists()) {
+            try {
+                copyDatabaseFromAssets()
+            } catch (e: IOException) {
+                throw RuntimeException("Error creating source database", e)
             }
-
-            outputStream.flush()
-            outputStream.close()
-            inputStream.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
         }
     }
 
-    override fun onCreate(db: SQLiteDatabase?) {
-        if (!databaseExists()) {
-            copyDatabase()
-        }
+    private fun copyDatabaseFromAssets() {
+        val inputStream = context.assets.open(DATABASE_NAME)
+        val outputDatabase = context.getDatabasePath(DATABASE_NAME)
+        val outputStream = FileOutputStream(outputDatabase)
+
+        inputStream.copyTo(outputStream)
+        inputStream.close()
+        outputStream.close()
     }
 
-    override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
-        // No implementation needed
+    fun getReadableDatabase(): SQLiteDatabase {
+        return SQLiteDatabase.openDatabase(
+            context.getDatabasePath(DATABASE_NAME).path,
+            null,
+            SQLiteDatabase.OPEN_READONLY
+        )
     }
 
+    // 查询单词数据
     fun getWordData(word: String): List<WordData> {
-        val db = this.readableDatabase
+        val db = getReadableDatabase()
         val query = "SELECT word, phonetic, definition, translation FROM ecdict WHERE word = ?"
         val cursor = db.rawQuery(query, arrayOf(word))
         val results = mutableListOf<WordData>()
@@ -65,19 +63,25 @@ class EcdictDatabaseHelper(private val context: Context) : SQLiteOpenHelper(cont
         return results
     }
 
+    // 查询翻译数据
     fun getTranslationData(translation: String): List<String> {
-        val db = readableDatabase
-        val query = "SELECT word, translation FROM ecdict"
-        val cursor = db.rawQuery(query, null)
+        val db = getReadableDatabase()
+        val query = "SELECT word FROM ecdict WHERE translation LIKE ? LIMIT 20"
+        val cursor = db.rawQuery(query, arrayOf("%$translation%"))
         val results = mutableListOf<String>()
-        while (cursor.moveToNext() && results.size < 20) {
+        while (cursor.moveToNext()) {
             val dataWord = cursor.getString(cursor.getColumnIndexOrThrow("word"))
-            val dataTranslation = cursor.getString(cursor.getColumnIndexOrThrow("translation"))
-            if (dataTranslation.contains(translation)) {
-                results.add(dataWord)
-            }
+            results.add(dataWord)
         }
         cursor.close()
         return results
     }
 }
+
+// 数据类，用于存储单词信息
+data class WordData(
+    val word: String,
+    val phonetic: String,
+    val definition: String,
+    val translation: String
+)
