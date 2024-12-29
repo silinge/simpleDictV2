@@ -5,84 +5,100 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-    <!-- Main Content -->
-    <LinearLayout
+    <!-- Main Content with System Window Insets -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:fillViewport="true"
+        android:fitsSystemWindows="true">
 
-        <EditText
-            android:id="@+id/queryInput"
-            android:layout_width="264dp"
-            android:layout_height="wrap_content"
-            android:autofillHints="输入查询内容"
-            android:hint="@string/query_hint"
-            android:inputType="text"
-            android:minHeight="48dp" />
-
-        <!-- Query Type Selection -->
-        <RadioGroup
-            android:id="@+id/queryTypeRadioGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/radioWord"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Word" />
-
-            <RadioButton
-                android:id="@+id/radioTranslation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Translation" />
-        </RadioGroup>
-
-        <Button
-            android:id="@+id/queryButton"
-            android:layout_width="237dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/query_button"
-            android:textColor="#0F0E0E" />
-
-        <TextView
-            android:id="@+id/resultText"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/results"
-            android:textSize="16sp" />
-    </LinearLayout>
+            android:paddingTop="16dp">
 
-    <!-- Bottom App Bar with Menu Button -->
+            <!-- Centered Search Box -->
+            <EditText
+                android:id="@+id/queryInput"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginHorizontal="32dp"
+                android:background="@drawable/search_background"
+                android:hint="@string/query_hint"
+                android:inputType="text"
+                android:paddingHorizontal="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintWidth_percent="0.5"/>
+
+            <!-- Split Search Button -->
+            <LinearLayout
+                android:id="@+id/buttonContainer"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="32dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/queryInput"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintWidth_percent="0.4">
+
+                <Button
+                    android:id="@+id/wordSearchButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/for_English"
+                    android:textAllCaps="false"
+                    app:cornerRadius="4dp"
+                    android:layout_marginEnd="4dp"/>
+
+                <Button
+                    android:id="@+id/translationSearchButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/for_Chinese"
+                    android:textAllCaps="false"
+                    app:cornerRadius="4dp"
+                    android:layout_marginStart="4dp"/>
+            </LinearLayout>
+
+            <!-- Results TextView -->
+            <TextView
+                android:id="@+id/resultText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="16dp"
+                android:textSize="16sp"
+                app:layout_constraintTop_toBottomOf="@id/buttonContainer"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom App Bar -->
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:backgroundTint="@color/white"
-        app:fabAlignmentMode="end">
+        app:fabAlignmentMode="end"/>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_more"
-            android:contentDescription="@string/fab_content_description"
-            app:tint="@color/white"
-            app:backgroundTint="@color/purple_700" />
-    </com.google.android.material.bottomappbar.BottomAppBar>
+    <!-- FAB for Menu -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/fab_content_description"
+        app:layout_anchor="@id/bottomAppBar"
+        android:src="@drawable/ic_menu"
+        app:tint="@color/white"
+        app:backgroundTint="?attr/colorPrimary"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
-<!--//@android:drawable/ic_menu_more-->
