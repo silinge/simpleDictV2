@@ -1,16 +1,18 @@
 package com.xvwilliam.simpledictv2
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.view.Gravity
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,24 +33,51 @@ class MainActivity : AppCompatActivity() {
         bottomAppBar = findViewById(R.id.bottomAppBar)
         val wordSearchButton = findViewById<Button>(R.id.wordSearchButton)
         val translationSearchButton = findViewById<Button>(R.id.translationSearchButton)
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
+        val menuFab = findViewById<FloatingActionButton>(R.id.menuFab)
+        val copyButton = findViewById<Button>(R.id.copyButton)
 
         // 设置底部应用栏
         setSupportActionBar(bottomAppBar)
 
-        // Word搜索按钮点击事件
+        // 设置菜单FAB点击事件
+        menuFab.setOnClickListener { view ->
+            val popup = PopupMenu(this, view, Gravity.TOP)
+            popup.menuInflater.inflate(R.menu.bottom_menu, popup.menu)
+
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_about -> {
+                        openMarkdownFile("about.md")
+                        true
+                    }
+                    R.id.menu_update_history -> {
+                        openMarkdownFile("updatehistory.md")
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popup.show()
+        }
+
+        // 搜索按钮点击事件
         wordSearchButton.setOnClickListener {
             performSearch("Word")
         }
 
-        // Translation搜索按钮点击事件
         translationSearchButton.setOnClickListener {
             performSearch("Translation")
         }
 
-        // FAB点击事件
-        fab.setOnClickListener {
-            bottomAppBar.showOverflowMenu()
+        // 复制按钮点击事件
+        copyButton.setOnClickListener {
+            val text = resultText.text.toString()
+            if (text.isNotEmpty()) {
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("查询结果", text)
+                clipboard.setPrimaryClip(clip)
+                Snackbar.make(it, "已复制到剪贴板", Snackbar.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -78,25 +107,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 resultText.text = "没有找到结果"
             }
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.bottom_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_about -> {
-                openMarkdownFile("about.md")
-                true
-            }
-            R.id.menu_update_history -> {
-                openMarkdownFile("updatehistory.md")
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
         }
     }
 
