@@ -1,6 +1,7 @@
 [versions]
 agp = "8.7.3"
 cardviewVersion = "1.0.0"
+commonmark = "0.21.0"
 constraintlayout = "2.2.0"
 core = "4.6.2"
 kotlin = "2.0.0"
@@ -18,6 +19,7 @@ material = "1.12.0"
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 cardview = { module = "androidx.cardview:cardview", version.ref = "cardviewVersion" }
+commonmark = { module = "org.commonmark:commonmark", version.ref = "commonmark" }
 core = { module = "io.noties.markwon:core", version.ref = "core" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

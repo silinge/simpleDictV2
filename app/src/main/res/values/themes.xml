@@ -5,7 +5,7 @@
         <item name="colorPrimaryVariant">@color/teal_700</item>
         <item name="colorOnPrimary">@android:color/white</item>
         <item name="android:fitsSystemWindows">true</item>
-        <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 </resources>

@@ -3,6 +3,8 @@ package com.xvwilliam.simpledictv2
 import android.os.Bundle
 import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
+import org.commonmark.parser.Parser
+import org.commonmark.renderer.html.HtmlRenderer
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
@@ -26,8 +28,14 @@ class MarkdownViewerActivity : AppCompatActivity() {
                 lines.joinToString("\n")
             }
 
+            // 使用CommonMark解析Markdown内容
+            val parser = Parser.builder().build()
+            val document = parser.parse(markdownContent)
+            val renderer = HtmlRenderer.builder().build()
+            val htmlContent = renderer.render(document)
+
             // 创建HTML内容
-            val htmlContent = """
+            val fullHtmlContent = """
                 <!DOCTYPE html>
                 <html>
                 <head>
@@ -49,14 +57,14 @@ class MarkdownViewerActivity : AppCompatActivity() {
                 </head>
                 <body>
                     <div class="markdown-body">
-                        $markdownContent
+                        $htmlContent
                     </div>
                 </body>
                 </html>
             """.trimIndent()
 
             // 加载HTML内容
-            webView.loadDataWithBaseURL(null, htmlContent, "text/html", "UTF-8", null)
+            webView.loadDataWithBaseURL(null, fullHtmlContent, "text/html", "UTF-8", null)
 
             // 启用JavaScript（如果需要）
             webView.settings.javaScriptEnabled = true

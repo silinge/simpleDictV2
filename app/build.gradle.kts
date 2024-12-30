@@ -59,8 +59,10 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(libs.material)
     implementation(libs.androidx.core.ktx)
-    implementation (libs.material)
-    implementation (libs.androidx.constraintlayout)
-    implementation (libs.cardview)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.cardview)
     implementation(libs.core)
+    implementation("io.noties.markwon:core:4.6.2") {
+        exclude(group = "com.atlassian.commonmark", module = "commonmark")
+    }
 }

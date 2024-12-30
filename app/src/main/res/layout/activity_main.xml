@@ -5,7 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
+
+
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -112,7 +115,8 @@
         android:layout_gravity="bottom"
         app:backgroundTint="@color/white"
         app:fabCradleMargin="0dp"
-        app:fabCradleRoundedCornerRadius="28dp"
+        app:fabCradleRoundedCornerRadius="0dp"
+        app:fabCradleVerticalOffset="0dp"
         app:fabAlignmentMode="end" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -122,7 +126,7 @@
         android:contentDescription="@string/fab_content_description"
         app:layout_anchor="@id/bottomAppBar"
         android:src="@drawable/ic_menu"
-        app:tint="@color/white"
-        app:backgroundTint="@color/teal_700" />
+        app:backgroundTint="@color/teal_700"
+        app:tint="@color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
