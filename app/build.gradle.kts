@@ -1,3 +1,7 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -27,15 +31,63 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
+    }
+}
+
+// 添加重命名任务
+tasks.register("renameReleaseApk") {
+    group = "custom"
+    description = "Rename release APK with date"
+
+    doLast {
+        // 修正路径，去掉重复的 app 目录
+        val releaseDir = project.projectDir.resolve("release")
+        val date = SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(Date())
+        val originalFile = releaseDir.resolve("app-release.apk")
+        val newFile = releaseDir.resolve("simpleDictV2_${date}.apk")
+
+        println("Looking for APK at: ${originalFile.absolutePath}")
+
+        if (originalFile.exists()) {
+            // 先复制文件，而不是直接重命名，以避免可能的文件锁定问题
+            originalFile.copyTo(newFile, overwrite = true)
+            println("Successfully created APK: ${newFile.name}")
+
+            // 同时更新 output-metadata.json
+            val metadataFile = releaseDir.resolve("output-metadata.json")
+            if (metadataFile.exists()) {
+                val metadata = metadataFile.readText()
+                val updatedMetadata = metadata.replace(
+                    "\"outputFile\": \"app-release.apk\"",
+                    "\"outputFile\": \"${newFile.name}\""
+                )
+                metadataFile.writeText(updatedMetadata)
+                println("Updated output-metadata.json")
+            }
+        } else {
+            println("Original APK not found at: ${originalFile.absolutePath}")
+            println("Please make sure you have generated the signed APK first")
+            println("Current directory: ${project.projectDir.absolutePath}")
+        }
+    }
+}
+
+// 设置任务依赖
+afterEvaluate {
+    tasks.named("assembleRelease") {
+        finalizedBy("renameReleaseApk")
     }
 }
 
@@ -66,3 +118,4 @@ dependencies {
         exclude(group = "com.atlassian.commonmark", module = "commonmark")
     }
 }
+
