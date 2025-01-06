@@ -1,0 +1,76 @@
+name: Release APK
+
+on:
+  push:
+    branches: [ master ]  # 你可以改成你的主分支名，如 master
+    
+jobs:
+  check-and-release:
+    runs-on: ubuntu-24.04
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Find APK file
+      id: find-apk
+      run: |
+        # 查找符合命名格式的最新APK文件
+        APK_FILE=$(find app/release -type f -name "simpleDictV2_*.apk" | sort -r | head -n 1)
+        if [ ! -z "$APK_FILE" ]; then
+          echo "Found APK: $APK_FILE"
+          echo "apk_path=$APK_FILE" >> $GITHUB_OUTPUT
+          # 提取日期部分作为版本号
+          VERSION=$(echo $APK_FILE | grep -o '[0-9]\{8\}')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Found version: $VERSION"
+        else
+          echo "No new APK file found"
+          exit 0
+        fi
+        
+    - name: Check if release exists
+      if: steps.find-apk.outputs.apk_path != ''
+      id: check-release
+      uses: actions/github-script@v6
+      with:
+        script: |
+          try {
+            const release = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.name,
+              tag: `v${process.env.VERSION}`
+            });
+            core.setOutput('release_exists', 'true');
+          } catch (e) {
+            core.setOutput('release_exists', 'false');
+          }
+      env:
+        VERSION: ${{ steps.find-apk.outputs.version }}
+        
+    - name: Create Release
+      if: steps.find-apk.outputs.apk_path != '' && steps.check-release.outputs.release_exists != 'true'
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ steps.find-apk.outputs.version }}
+        release_name: Release ${{ steps.find-apk.outputs.version }}
+        body: |
+          Automated release for version ${{ steps.find-apk.outputs.version }}
+          
+          This release was automatically generated from the APK file.
+        draft: false
+        prerelease: false
+        
+    - name: Upload Release Asset
+      if: steps.find-apk.outputs.apk_path != '' && steps.check-release.outputs.release_exists != 'true'
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ steps.find-apk.outputs.apk_path }}
+        asset_name: ${{ steps.find-apk.outputs.apk_path }}
+        asset_content_type: application/vnd.android.package-archive
