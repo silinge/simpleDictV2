@@ -1,0 +1,49 @@
+name: Release APK
+
+on:
+  push:
+    branches: [ master ]  # 你可以改成你的主分支名，如 master
+
+# 添加权限配置
+permissions:
+  contents: write      # 允许工作流创建 release 和上传文件
+  discussions: write  # 如果你需要在 discussion 中发布
+
+  
+jobs:
+  check-and-release:
+    runs-on: ubuntu-24.04
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Find APK file
+      id: find-apk
+      run: |
+        APK_FILE=$(find app/release -type f -name "simpleDictV2_*.apk" | sort -r | head -n 1)
+        if [ ! -z "$APK_FILE" ]; then
+          echo "Found APK: $APK_FILE"
+          echo "apk_path=$APK_FILE" >> $GITHUB_OUTPUT
+          VERSION=$(echo $APK_FILE | grep -o '[0-9]\{8\}')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Found version: $VERSION"
+        else
+          echo "No new APK file found"
+          exit 0
+        fi
+
+    - name: Create Release
+      if: steps.find-apk.outputs.apk_path != ''
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ${{ steps.find-apk.outputs.apk_path }}
+        tag_name: v${{ steps.find-apk.outputs.version }}
+        name: Release ${{ steps.find-apk.outputs.version }}
+        body: |
+          Automated release for version ${{ steps.find-apk.outputs.version }}
+          
+          This release was automatically generated from the APK file.
+        draft: false
+        prerelease: false
+        token: ${{ secrets.GITHUB_TOKEN }}
