@@ -1,9 +1,12 @@
 <resources>
-    <style name="Theme.simpledictv2" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light and dark theme here -->
+    <style name="Theme.simpledictv2" parent="Theme.Material3.Light.NoActionBar">
+        <!-- 基础配色 -->
         <item name="colorPrimary">@android:color/holo_blue_dark</item>
         <item name="colorPrimaryVariant">@color/teal_700</item>
         <item name="colorOnPrimary">@android:color/white</item>
+        <!-- 设置淡灰色背景 -->
+        <item name="android:windowBackground">#F5F5F5</item>
+        <!-- 系统窗口设置 -->
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowTranslucentStatus">true</item>

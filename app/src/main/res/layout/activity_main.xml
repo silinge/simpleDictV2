@@ -26,15 +26,17 @@
                 android:id="@+id/queryInput"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginHorizontal="32dp"
                 android:background="@drawable/search_background"
                 android:hint="@string/query_hint"
                 android:inputType="text"
                 android:paddingHorizontal="16dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:textColorHint="#757575"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintWidth_percent="0.5"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_percent="0.5" />
 
             <LinearLayout
                 android:id="@+id/buttonContainer"
@@ -52,21 +54,23 @@
                     android:id="@+id/wordSearchButton"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginEnd="4dp"
                     android:layout_weight="1"
                     android:text="@string/for_English"
                     android:textAllCaps="false"
-                    app:cornerRadius="4dp"
-                    android:layout_marginEnd="4dp"/>
+                    android:textColor="#212121"
+                    app:cornerRadius="4dp" />
 
                 <Button
                     android:id="@+id/translationSearchButton"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:text="@string/for_Chinese"
                     android:textAllCaps="false"
-                    app:cornerRadius="4dp"
-                    android:layout_marginStart="4dp"/>
+                    android:textColor="#212121"
+                    app:cornerRadius="4dp" />
             </LinearLayout>
 
             <!-- Results Container -->
@@ -95,12 +99,13 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/copyButton"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
                         android:layout_marginTop="8dp"
                         android:text="@string/copy_it"
-                        style="@style/Widget.MaterialComponents.Button.TextButton"/>
+                        android:textColor="#0277BD" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -113,7 +118,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
-        app:backgroundTint="@color/white"
+        app:backgroundTint="@android:color/white"
         app:fabCradleMargin="0dp"
         app:fabCradleRoundedCornerRadius="0dp"
         app:fabCradleVerticalOffset="0dp"
